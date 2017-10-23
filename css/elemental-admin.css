@@ -112,3 +112,14 @@ td.col-ElementSummary {
         .elementalpreview__icon img {
             opacity: 0.4;
         }
+
+.elementaledit {
+    display: block;
+    color: inherit;
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: inherit;
+    }
+}
