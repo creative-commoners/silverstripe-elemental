@@ -124,7 +124,7 @@ td.col-ElementSummary {
     }
 }
 
-// Block history styles
+/* Block history styles */
 .element-history__date--small {
     color: #aaa;
     font-size: .8rem;
