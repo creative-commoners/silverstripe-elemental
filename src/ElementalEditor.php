@@ -10,7 +10,9 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldSortableHeader;
@@ -113,15 +115,31 @@ class ElementalEditor
                 ->removeComponentsByType(array(
                     GridFieldAddNewButton::class,
                     GridFieldSortableHeader::class,
+                    GridFieldEditButton::class,
                     GridFieldDeleteAction::class,
                     GridFieldPaginator::class,
                     GridFieldPageCount::class,
-                    GridFieldVersionedState::class,
                     GridFieldAddExistingAutocompleter::class,
                 ))
                 ->addComponent(new GridFieldOrderableRows('Sort'))
-                // delete elements rather than unlinking them
-                ->addComponent(new GridFieldDeleteAction(false))
+        );
+
+        // Add version state column
+        if (class_exists(GridFieldVersionedState::class)) {
+            $config->addComponent(
+                (new GridFieldDataColumns())
+                    ->setDisplayFields([
+                        'VersionedState' => 'Versioned state'
+                    ])
+            );
+            $config->addComponent(new GridFieldVersionedState(['VersionedState']));
+        }
+
+        // Ensure the edit and delete icons are last
+        $config->addComponents(
+            new GridFieldEditButton(),
+            // delete elements rather than unlinking them
+            new GridFieldDeleteAction(false)
         );
 
         $gridField->addExtraClass('elemental-editor');
