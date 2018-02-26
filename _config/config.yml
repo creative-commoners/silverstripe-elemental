@@ -23,3 +23,7 @@ Symbiote\GridFieldExtensions\GridFieldAddNewMultiClassHandler:
 SilverStripe\Core\Injector\Injector:
   SilverStripe\CMS\Controllers\CMSSiteTreeFilter_Search:
     class: DNADesign\Elemental\Controllers\ElementSiteTreeFilterSearch
+
+SilverStripe\CMS\Model\SiteTree:
+  extensions:
+    ElementalDenormalisationExtension: DNADesign\Elemental\Extensions\ElementRelationDenormalisationExtension

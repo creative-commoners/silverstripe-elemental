@@ -1,0 +1,16 @@
+DNADesign\Elemental\Models\ElementalArea:
+  page_1_area:
+    Ignore: Me
+
+DNADesign\Elemental\Models\ElementContent:
+  page_1_content_1:
+    ParentID: =>DNADesign\Elemental\Models\ElementalArea.page_1_area
+    HTML: <p>Hello world</p>
+  page_1_content_2:
+    ParentID: =>DNADesign\Elemental\Models\ElementalArea.page_1_area
+    HTML: <p>Hello again</p>
+
+SilverStripe\CMS\Model\SiteTree:
+  page_1:
+    Title: My test page
+    ElementalAreaID: =>DNADesign\Elemental\Models\ElementalArea.page_1_area

@@ -8,6 +8,7 @@ use DNADesign\Elemental\Forms\HistoricalVersionedGridFieldItemRequest;
 use DNADesign\Elemental\Forms\TextCheckboxGroupField;
 use Exception;
 use SilverStripe\CMS\Controllers\CMSPageEditController;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
