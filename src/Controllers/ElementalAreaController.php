@@ -14,6 +14,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\SecurityToken;
 
 /**
@@ -111,20 +112,23 @@ class ElementalAreaController extends CMSMain
      *
      * @param HTTPRequest $request
      * @return HTTPResponse|null JSON encoded string or null if an exception is thrown
-     * @throws HTTPResponse_Exception
      */
     public function apiSaveForm(HTTPRequest $request)
     {
         // Validate required input data
         if (!isset($this->urlParams['ID'])) {
-            $this->jsonError(400);
-            return null;
+            return $this->jsonResponse([
+                'status' => 'failure',
+                'message' => _t(__CLASS__ . '.MISSING_BODY', 'Missing required ID parameter'),
+            ], 400);
         }
 
-        $data = Convert::json2array($request->getBody());
+        $data = json_decode((string)$request->getBody(), true);
         if (empty($data)) {
-            $this->jsonError(400);
-            return null;
+            return $this->jsonResponse([
+                'status' => 'failure',
+                'message' => _t(__CLASS__ . '.MISSING_BODY', 'Missing required request data'),
+            ], 400);
         }
 
         // Inject request body as request vars
@@ -134,16 +138,19 @@ class ElementalAreaController extends CMSMain
 
         // Check security token
         if (!SecurityToken::inst()->checkRequest($request)) {
-            $this->jsonError(400);
-            return null;
+            return $this->jsonResponse([
+                'status' => 'failure',
+                'message' => _t(__CLASS__ . '.TIMEOUT', 'Request timed out, please try again'),
+            ], 400);
         }
 
         /** @var BaseElement $element */
         $element = BaseElement::get()->byID($this->urlParams['ID']);
         // Ensure the element can be edited by the current user
         if (!$element || !$element->canEdit()) {
-            $this->jsonError(403);
-            return null;
+            return $this->jsonResponse([
+                'status' => 'failure',
+            ], 403);
         }
 
         // Remove the pseudo namespaces that were added by the form factory
@@ -159,18 +166,20 @@ class ElementalAreaController extends CMSMain
                 // Track changes so we can return to the client
                 $updated = true;
             }
+        } catch (ValidationException $ex) {
+            return $this->jsonResponse([
+                'status' => 'failure',
+                'message' => $ex->getMessage(),
+            ], 400);
         } catch (Exception $ex) {
             Injector::inst()->get(LoggerInterface::class)->debug($ex->getMessage());
-
-            $this->jsonError(500);
-            return null;
+            return $this->jsonResponse(['status' => 'failure'], 500);
         }
 
-        $body = Convert::raw2json([
+        return $this->jsonResponse([
             'status' => 'success',
             'updated' => $updated,
         ]);
-        return HTTPResponse::create($body)->addHeader('Content-Type', 'application/json');
     }
 
     /**
@@ -215,5 +224,18 @@ class ElementalAreaController extends CMSMain
             $output[$fieldName] = $value;
         }
         return $output;
+    }
+
+    /**
+     * @param array $body
+     * @param int $statusCode
+     * @return HTTPResponse
+     */
+    protected function jsonResponse(array $body, $statusCode = 200)
+    {
+        return HTTPResponse::create()
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody(json_encode($body))
+            ->setStatusCode($statusCode);
     }
 }

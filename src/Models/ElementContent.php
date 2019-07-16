@@ -52,4 +52,13 @@ class ElementContent extends BaseElement
     {
         return _t(__CLASS__ . '.BlockType', 'Content');
     }
+
+    public function validate()
+    {
+        $validator = parent::validate();
+        if ($this->isInDB() && empty($this->Title)) {
+            $validator->addFieldError('Title', 'Title is required');
+        }
+        return $validator;
+    }
 }

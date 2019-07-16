@@ -3,7 +3,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import AbstractAction from 'components/ElementActions/AbstractAction';
-import backend from 'lib/Backend';
+import fetch from 'isomorphic-fetch';
 import i18n from 'i18n';
 import { loadElementSchemaValue } from 'state/editor/loadElementSchemaValue';
 import { loadElementFormStateName } from 'state/editor/loadElementFormStateName';
@@ -14,12 +14,16 @@ import { initialize } from 'redux-form';
  * the inline edit form's data for the current block.
  */
 const SaveAction = (MenuComponent) => (props) => {
+  /**
+   * @param {Event} event
+   */
   const handleClick = (event) => {
     event.stopPropagation();
 
     const { element, type, securityId, formData, reinitialiseForm } = props;
 
     const { jQuery: $ } = window;
+
     const noTitle = i18n.inject(
       i18n._t(
         'ElementHeader.NOTITLE',
@@ -28,18 +32,36 @@ const SaveAction = (MenuComponent) => (props) => {
       { type: type.title }
     );
 
-    const endpointSpec = {
-      url: loadElementSchemaValue('saveUrl', element.ID),
-      method: loadElementSchemaValue('saveMethod'),
-      payloadFormat: loadElementSchemaValue('payloadFormat'),
-      defaultData: {
-        SecurityID: securityId
-      },
-    };
+    const fallbackErrorText = i18n.inject(
+      i18n._t(
+        'ElementSaveAction.ERROR_NOTIFICATION',
+        'Error saving \'{title}\''
+      ),
+      { title: element.Title || noTitle }
+    );
 
-    const endpoint = backend.createEndpointFetcher(endpointSpec);
-    endpoint(formData)
-      .then(() => {
+    fetch(loadElementSchemaValue('saveUrl', element.ID), {
+      method: loadElementSchemaValue('saveMethod'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...formData,
+        SecurityID: securityId,
+      }),
+    })
+      .then(response => response.json())
+      .then(response => {
+        // Handle failure responses, e.g. validation failures
+        if (response.status === 'failure') {
+          $.noticeAdd({
+            text: response.message || fallbackErrorText,
+            stay: false,
+            type: 'error'
+          });
+          return;
+        }
+
         // Update the Apollo query cache with the new form data
         const { apolloClient } = window.ss;
 
@@ -64,15 +86,10 @@ const SaveAction = (MenuComponent) => (props) => {
           type: 'success'
         });
       })
-      .catch(() => {
+      .catch(response => {
+        // Server error (non-validation related)
         $.noticeAdd({
-          text: i18n.inject(
-            i18n._t(
-              'ElementSaveAction.ERROR_NOTIFICATION',
-              'Error saving \'{title}\''
-            ),
-            { title: element.Title || noTitle }
-          ),
+          text: response.message || fallbackErrorText,
           stay: false,
           type: 'error'
         });
