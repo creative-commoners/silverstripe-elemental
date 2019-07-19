@@ -3,7 +3,8 @@
 namespace DNADesign\Elemental\Models;
 
 use DNADesign\Elemental\Controllers\ElementController;
-use DNADesign\Elemental\Forms\TextCheckboxGroupField;
+use DNADesign\Elemental\Forms\AdjustableTitleField;
+use DNADesign\Elemental\ORM\DBAdjustableTitle;
 use DNADesign\Elemental\ORM\FieldType\DBObjectType;
 use Exception;
 use SilverStripe\CMS\Controllers\CMSPageEditController;
@@ -58,7 +59,7 @@ class BaseElement extends DataObject
     private static $description = 'Base element class';
 
     private static $db = [
-        'Title' => 'Varchar(255)',
+        'Title' => DBAdjustableTitle::class,
         'ShowTitle' => 'Boolean',
         'Sort' => 'Int',
         'ExtraClass' => 'Varchar(255)',
@@ -299,11 +300,15 @@ class BaseElement extends DataObject
 
             // Add a combined field for "Title" and "Displayed" checkbox in a Bootstrap input group
             $fields->removeByName('ShowTitle');
-            $fields->replaceField(
-                'Title',
-                TextCheckboxGroupField::create()
-                    ->setName('Title')
-            );
+
+            /** @var AdjustableTitleField $titleField */
+            $titleField = $fields->dataFieldByName('Title');
+            $titleField->setShowTitleFieldName('ShowTitle');
+//            $fields->removeByName('TitleTemplate');
+//            $fields->replaceField(
+//                'Title',
+//                AdjustableTitleField::create('Title', 'TitleTemplate', 'Title')
+//            );
 
             // Rename the "Main" tab
             $fields->fieldByName('Root.Main')
