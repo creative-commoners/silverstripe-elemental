@@ -20,15 +20,13 @@ describe('ElementActions', () => {
 
   describe('renderEditTabs()', () => {
     it('should map input tabs into an array of buttons', () => {
-      const wrapper = shallow(
-        <ElementActions
-          areaId={1}
-          editTabs={testTabs}
-          type={{ title: 'Some block' }}
-          ActionMenuComponent={ActionMenuComponent}
-          handleEditTabsClick={editTabsClick}
-        />
-      );
+      const wrapper = shallow(<ElementActions
+        areaId={1}
+        editTabs={testTabs}
+        type={{ title: 'Some block' }}
+        ActionMenuComponent={ActionMenuComponent}
+        handleEditTabsClick={editTabsClick}
+      />);
 
       const actions = wrapper.find(AbstractAction);
       expect(actions).toHaveLength(3);
@@ -40,15 +38,13 @@ describe('ElementActions', () => {
 
   describe('render()', () => {
     it('should render the given "edit tabs" in the action menu', () => {
-      const wrapper = shallow(
-        <ElementActions
-          areaId={1}
-          editTabs={testTabs}
-          type={{ title: 'Some block' }}
-          ActionMenuComponent={ActionMenuComponent}
-          handleEditTabsClick={editTabsClick}
-        />
-      );
+      const wrapper = shallow(<ElementActions
+        areaId={1}
+        editTabs={testTabs}
+        type={{ title: 'Some block' }}
+        ActionMenuComponent={ActionMenuComponent}
+        handleEditTabsClick={editTabsClick}
+      />);
 
       // No dropdown separator should exist when there are no non-CMS actions
       expect(wrapper.find('DropdownItem').length).toBe(0);
@@ -60,17 +56,15 @@ describe('ElementActions', () => {
     });
 
     it('should render a divider when CMS tab actions and default actions are rendered', () => {
-      const wrapper = shallow(
-        <ElementActions
-          areaId={1}
-          editTabs={testTabs}
-          type={{ title: 'Some block' }}
-          ActionMenuComponent={ActionMenuComponent}
-          handleEditTabsClick={editTabsClick}
-        >
-          <AbstractAction title="some button" />
-        </ElementActions>
-      );
+      const wrapper = shallow(<ElementActions
+        areaId={1}
+        editTabs={testTabs}
+        type={{ title: 'Some block' }}
+        ActionMenuComponent={ActionMenuComponent}
+        handleEditTabsClick={editTabsClick}
+      >
+        <AbstractAction title="some button" />
+      </ElementActions>);
 
       expect(wrapper.find('DropdownItem').length).toBe(1);
     });

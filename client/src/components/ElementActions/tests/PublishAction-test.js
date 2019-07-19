@@ -18,19 +18,17 @@ describe('PublishAction', () => {
 
   beforeEach(() => {
     mockMutation = jest.fn(() => new Promise((resolve) => resolve()));
-    wrapper = mount(
-      <ActionComponent
-        title="My abstract action"
-        element={{
+    wrapper = mount(<ActionComponent
+      title="My abstract action"
+      element={{
           ID: 123,
           Version: 234,
           IsLiveVersion: false,
           BlockSchema: { type: 'Test' }
         }}
-        actions={{ handlePublishBlock: mockMutation }}
-        toggle={false}
-      />
-    );
+      actions={{ handlePublishBlock: mockMutation }}
+      toggle={false}
+    />);
 
     jQuery.noticeAdd = jest.fn();
   });
@@ -59,12 +57,10 @@ describe('PublishAction', () => {
   });
 
   it('returns null when is the live version', () => {
-    const draftWrapper = mount(
-      <ActionComponent
-        element={{ IsLiveVersion: true, BlockSchema: { type: 'Test' } }}
-        actions={{ handlePublishBlock: mockMutation }}
-      />
-    );
+    const draftWrapper = mount(<ActionComponent
+      element={{ IsLiveVersion: true, BlockSchema: { type: 'Test' } }}
+      actions={{ handlePublishBlock: mockMutation }}
+    />);
 
     expect(draftWrapper.find('button').length).toBe(0);
   });

@@ -50,20 +50,18 @@ describe('ElementList', () => {
 
   describe('renderBlocks()', () => {
     it('renders elements when blocks are provided as props', () => {
-      const wrapper = shallow(
-        <ElementList
-          key={'1'}
-          blocks={blocks}
-          allowedElementTypes={elementTypes}
-          elementTypes={elementTypes}
-          ElementComponent={Element}
-          LoadingComponent={Loading}
-          HoverBarComponent={HoverBar}
-          loading={false}
-          areaId={1}
-          connectDropTarget={connectDropTarget}
-        />
-      );
+      const wrapper = shallow(<ElementList
+        key={'1'}
+        blocks={blocks}
+        allowedElementTypes={elementTypes}
+        elementTypes={elementTypes}
+        ElementComponent={Element}
+        LoadingComponent={Loading}
+        HoverBarComponent={HoverBar}
+        loading={false}
+        areaId={1}
+        connectDropTarget={connectDropTarget}
+      />);
 
       expect(wrapper.name()).toEqual('div');
       expect(wrapper.find(Element).length).toBe(2);
@@ -71,20 +69,18 @@ describe('ElementList', () => {
     });
 
     it('renders a loading component', () => {
-      const wrapper = shallow(
-        <ElementList
-          key={'2'}
-          blocks={[]}
-          allowedElementTypes={elementTypes}
-          elementTypes={elementTypes}
-          ElementComponent={Element}
-          LoadingComponent={Loading}
-          HoverBarComponent={HoverBar}
-          loading
-          areaId={1}
-          connectDropTarget={connectDropTarget}
-        />
-      );
+      const wrapper = shallow(<ElementList
+        key={'2'}
+        blocks={[]}
+        allowedElementTypes={elementTypes}
+        elementTypes={elementTypes}
+        ElementComponent={Element}
+        LoadingComponent={Loading}
+        HoverBarComponent={HoverBar}
+        loading
+        areaId={1}
+        connectDropTarget={connectDropTarget}
+      />);
 
       expect(wrapper.name()).toEqual('div');
       expect(wrapper.find(Element).length).toBe(0);
@@ -92,20 +88,18 @@ describe('ElementList', () => {
     });
 
     it('renders a placeholder message when no elements are provided as props', () => {
-      const wrapper = shallow(
-        <ElementList
-          key={'3'}
-          blocks={[]}
-          allowedElementTypes={elementTypes}
-          elementTypes={elementTypes}
-          ElementComponent={Element}
-          LoadingComponent={Loading}
-          HoverBarComponent={HoverBar}
-          loading={false}
-          areaId={1}
-          connectDropTarget={connectDropTarget}
-        />
-      );
+      const wrapper = shallow(<ElementList
+        key={'3'}
+        blocks={[]}
+        allowedElementTypes={elementTypes}
+        elementTypes={elementTypes}
+        ElementComponent={Element}
+        LoadingComponent={Loading}
+        HoverBarComponent={HoverBar}
+        loading={false}
+        areaId={1}
+        connectDropTarget={connectDropTarget}
+      />);
 
       expect(wrapper.name()).toEqual('div');
       expect(wrapper.find(Element).length).toBe(0);

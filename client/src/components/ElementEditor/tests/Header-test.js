@@ -28,17 +28,15 @@ describe('Header', () => {
   describe('render()', () => {
     it('should render the icon', () => {
       element.ID = '11';
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       expect(wrapper.find('i.font-icon-block-file')).toHaveLength(1);
       expect(wrapper.find('#element-icon-11')).toHaveLength(1);
@@ -46,34 +44,30 @@ describe('Header', () => {
 
     it('should render the title', () => {
       element.ID = '12';
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       expect(wrapper.text()).toContain('Sample File Block');
     });
 
     it('should contain a Tooltip', () => {
       element.ID = '13';
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const tooltip = wrapper.find('Tooltip');
       expect(tooltip.length).toBe(1);
@@ -81,18 +75,16 @@ describe('Header', () => {
     });
 
     it('should render a "right caret" button when not expandable', () => {
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          expandable={false}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        expandable={false}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const expandButton = wrapper.find('.element-editor-header__expand');
       expect(expandButton.length).toBe(1);
@@ -100,19 +92,17 @@ describe('Header', () => {
     });
 
     it('should render a "down caret" button when not expanded', () => {
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          expandable
-          previewExpanded={false}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        expandable
+        previewExpanded={false}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const expandButton = wrapper.find('.element-editor-header__expand');
       expect(expandButton.length).toBe(1);
@@ -120,19 +110,17 @@ describe('Header', () => {
     });
 
     it('should render an "up caret" button when expanded', () => {
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          expandable
-          previewExpanded
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        expandable
+        previewExpanded
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const expandButton = wrapper.find('.element-editor-header__expand');
       expect(expandButton.length).toBe(1);
@@ -140,35 +128,31 @@ describe('Header', () => {
     });
 
     it('should render an ElementActions component when the element is expandable', () => {
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          expandable
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        expandable
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       expect(wrapper.text()).toContain('ElementActionsComponent');
     });
 
     it('should not render an ElementActions when the element is not expandable', () => {
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          expandable={false}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        expandable={false}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       expect(wrapper.text()).not.toContain('ElementActionsComponent');
     });
@@ -178,17 +162,15 @@ describe('Header', () => {
     it('identifies draft versions', () => {
       element.IsPublished = false;
       element.IsLiveVersion = false;
-      const wrapper = shallow(
-        <Header
-          element={element}
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        element={element}
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const versionedState = wrapper.find('.element-editor-header__version-state');
       expect(versionedState.prop('title')).toContain('not been published');
@@ -198,17 +180,15 @@ describe('Header', () => {
     it('identifies modified versions', () => {
       element.IsPublished = true;
       element.IsLiveVersion = false;
-      const wrapper = shallow(
-        <Header
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          element={element}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        element={element}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       const versionedState = wrapper.find('.element-editor-header__version-state');
       expect(versionedState.prop('title')).toContain('has unpublished changes');
@@ -218,17 +198,15 @@ describe('Header', () => {
     it('ignores live versions', () => {
       element.IsPublished = true;
       element.IsLiveVersion = true;
-      const wrapper = shallow(
-        <Header
-          areaId={1}
-          type={type}
-          ElementActionsComponent={ElementActionsComponent}
-          element={element}
-          connectDragSource={content => content}
-          connectDragPreview={content => content}
-          onDragEnd={() => {}}
-        />
-      );
+      const wrapper = shallow(<Header
+        areaId={1}
+        type={type}
+        ElementActionsComponent={ElementActionsComponent}
+        element={element}
+        connectDragSource={content => content}
+        connectDragPreview={content => content}
+        onDragEnd={() => {}}
+      />);
 
       expect(wrapper.find('.element-editor-header__version-state').length).toBe(0);
     });

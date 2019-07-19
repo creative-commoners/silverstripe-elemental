@@ -8,14 +8,12 @@ import { DropTarget } from 'react-dnd';
 class Toolbar extends PureComponent {
   render() {
     const { AddNewButtonComponent, elementTypes, areaId, connectDropTarget } = this.props;
-    return connectDropTarget(
-      <div className="element-editor__toolbar">
-        <AddNewButtonComponent
-          elementTypes={elementTypes}
-          areaId={areaId}
-        />
-      </div>
-    );
+    return connectDropTarget(<div className="element-editor__toolbar">
+      <AddNewButtonComponent
+        elementTypes={elementTypes}
+        areaId={areaId}
+      />
+    </div>);
   }
 }
 

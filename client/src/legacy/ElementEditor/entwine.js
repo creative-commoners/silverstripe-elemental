@@ -28,9 +28,7 @@ const resetStores = () => {
     }
 
     // We can introspect the store to find form names in the `element` namespace
-    store.dispatch(destroy(
-      ...Object.keys(store.getState().form.formState.element || {}).map(name => `element.${name}`)
-    ));
+    store.dispatch(destroy(...Object.keys(store.getState().form.formState.element || {}).map(name => `element.${name}`)));
   }, 0);
 };
 

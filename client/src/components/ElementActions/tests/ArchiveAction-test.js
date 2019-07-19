@@ -15,19 +15,17 @@ describe('ArchiveAction', () => {
   const ActionComponent = ArchiveAction(WrappedComponent);
 
   beforeEach(() => {
-    wrapper = mount(
-      <ActionComponent
-        title="My abstract action"
-        element={{
+    wrapper = mount(<ActionComponent
+      title="My abstract action"
+      element={{
           ID: 123,
           IsPublished: true,
           BlockSchema: { type: 'Test' }
         }}
-        isPublished
-        actions={{ handleArchiveBlock: mockMutation }}
-        toggle={false}
-      />
-    );
+      isPublished
+      actions={{ handleArchiveBlock: mockMutation }}
+      toggle={false}
+    />);
   });
 
   it('renders the wrapped component', () => {
@@ -56,25 +54,21 @@ describe('ArchiveAction', () => {
   });
 
   it('indicates that the block will be sent to archive', () => {
-    const unpublishedWrapper = mount(
-      <ActionComponent
-        title="My abstract action"
-        element={{
+    const unpublishedWrapper = mount(<ActionComponent
+      title="My abstract action"
+      element={{
           ID: 123,
           IsPublished: false,
           BlockSchema: { type: 'Test' }
         }}
-        actions={{ handleArchiveBlock: mockMutation }}
-        toggle={false}
-      />
-    );
+      actions={{ handleArchiveBlock: mockMutation }}
+      toggle={false}
+    />);
     const mockConfirm = jest.fn();
     global.confirm = mockConfirm;
 
     unpublishedWrapper.find('button').simulate('click');
-    expect(mockConfirm).toHaveBeenCalledWith(
-      'Are you sure you want to send this block to the archive?'
-    );
+    expect(mockConfirm).toHaveBeenCalledWith('Are you sure you want to send this block to the archive?');
   });
 
   it('indicates that the block will be unpublished before archiving', () => {
@@ -82,8 +76,6 @@ describe('ArchiveAction', () => {
     global.confirm = mockConfirm;
 
     wrapper.find('button').simulate('click');
-    expect(mockConfirm).toHaveBeenCalledWith(expect.stringContaining(
-      'Warning: This block will be unpublished'
-    ));
+    expect(mockConfirm).toHaveBeenCalledWith(expect.stringContaining('Warning: This block will be unpublished'));
   });
 });

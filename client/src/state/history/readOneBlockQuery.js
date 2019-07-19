@@ -53,8 +53,7 @@ const config = {
       }
     };
   },
-  props(
-    {
+  props({
       data: {
         error,
         refetch,
@@ -68,8 +67,7 @@ const config = {
         limit,
         recordId,
       },
-    }
-  ) {
+    }) {
     const versions = readOneBlock || null;
 
     const errors = error && error.graphQLErrors &&

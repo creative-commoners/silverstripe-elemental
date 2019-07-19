@@ -27,9 +27,7 @@ describe('HistoricElementView', () => {
   // Temporarily disable (with xdescribe):
   xdescribe('render', () => {
     beforeEach(() => {
-      history = ReactTestUtils.renderIntoDocument(
-        <HistoricElementView data={datumSet} />
-      );
+      history = ReactTestUtils.renderIntoDocument(<HistoricElementView data={datumSet} />);
     });
 
     it('The header should feature the Element type', () => {

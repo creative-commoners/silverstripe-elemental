@@ -28,12 +28,10 @@ class InlineEditForm extends PureComponent {
     });
 
     $.noticeAdd({
-      text: i18n.inject(
-        i18n._t(
+      text: i18n.inject(i18n._t(
           'ElementEditForm.ERROR_NOTIFICATION',
           'Error displaying the edit form for this block'
-        ),
-      ),
+        )),
       stay: true,
       type: 'notice'
     });

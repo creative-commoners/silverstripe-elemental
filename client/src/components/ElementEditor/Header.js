@@ -124,11 +124,9 @@ class Header extends Component {
       'element-editor-header__title--none': !element.Title,
     });
     const expandTitle = i18n._t('ElementHeader.EXPAND', 'Show editable fields');
-    const containerClasses = classNames(
-      'element-editor-header', {
+    const containerClasses = classNames('element-editor-header', {
         'element-editor-header--simple': simple,
-      }
-    );
+      });
     const expandCaretClasses = classNames(
       'element-editor-header__expand',
       {

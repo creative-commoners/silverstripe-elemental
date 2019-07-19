@@ -17,19 +17,17 @@ describe('UnpublishAction', () => {
   window.jQuery = jQuery;
 
   beforeEach(() => {
-    wrapper = mount(
-      <ActionComponent
-        title="My abstract action"
-        element={{
+    wrapper = mount(<ActionComponent
+      title="My abstract action"
+      element={{
           ID: 123,
           IsPublished: true,
           BlockSchema: { type: 'Test' },
         }}
-        type={{ title: 'Some block' }}
-        actions={{ handleUnpublishBlock: mockMutation }}
-        toggle={false}
-      />
-    );
+      type={{ title: 'Some block' }}
+      actions={{ handleUnpublishBlock: mockMutation }}
+      toggle={false}
+    />);
 
     jQuery.noticeAdd = jest.fn();
   });
@@ -48,13 +46,11 @@ describe('UnpublishAction', () => {
   });
 
   it('returns null when is not published', () => {
-    const draftWrapper = mount(
-      <ActionComponent
-        element={{ IsPublished: false, BlockSchema: { type: 'Test' } }}
-        actions={{ handleUnpublishBlock: mockMutation }}
-        type={{ title: 'Some block' }}
-      />
-    );
+    const draftWrapper = mount(<ActionComponent
+      element={{ IsPublished: false, BlockSchema: { type: 'Test' } }}
+      actions={{ handleUnpublishBlock: mockMutation }}
+      type={{ title: 'Some block' }}
+    />);
 
     expect(draftWrapper.find('button').length).toBe(0);
   });

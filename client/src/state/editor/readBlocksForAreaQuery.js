@@ -15,7 +15,8 @@ query ReadBlocksForArea($id:ID!) {
       BlockSchema
       IsLiveVersion
       IsPublished
-      Version   
+      Version
+      ElementsID
     }
   }
 }
@@ -29,15 +30,13 @@ const config = {
       }
     };
   },
-  props(
-    {
+  props({
       data: {
         error,
         readOneElementalArea,
         loading: networkLoading,
       },
-    }
-  ) {
+    }) {
     let blocks = null;
     if (readOneElementalArea) {
       // Remove the GraphQL pagination keys

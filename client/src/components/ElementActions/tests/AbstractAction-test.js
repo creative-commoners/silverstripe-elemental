@@ -13,15 +13,13 @@ describe('AbstractAction', () => {
   let wrapper = null;
 
   beforeEach(() => {
-    wrapper = mount(
-      <AbstractAction
-        onClick={clickHandler}
-        title="My abstract action"
-        disabled={false}
-        className="foo-bar"
-        toggle={false}
-      />
-    );
+    wrapper = mount(<AbstractAction
+      onClick={clickHandler}
+      title="My abstract action"
+      disabled={false}
+      className="foo-bar"
+      toggle={false}
+    />);
   });
 
   it('renders a DropdownItem', () => {

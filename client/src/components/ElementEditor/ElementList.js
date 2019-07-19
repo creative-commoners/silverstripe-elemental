@@ -29,7 +29,6 @@ class ElementList extends Component {
    */
   renderBlocks() {
     const {
-      ElementComponent,
       HoverBarComponent,
       DragIndicatorComponent,
       blocks,
@@ -51,24 +50,29 @@ class ElementList extends Component {
       return <div>{i18n._t('ElementList.ADD_BLOCKS', 'Add blocks to place your content')}</div>;
     }
 
-    let output = blocks.map((element) => (
-      <div key={element.ID}>
-        <ElementComponent
-          element={element}
-          areaId={areaId}
-          type={getElementTypeConfig(element.BlockSchema.typeName, elementTypes)}
-          link={element.BlockSchema.actions.edit}
-          onDragOver={onDragOver}
-          onDragEnd={onDragEnd}
-          onDragStart={onDragStart}
-        />
-        {isDraggingOver || <HoverBarComponent
-          areaId={areaId}
-          elementId={element.ID}
-          elementTypes={allowedElementTypes}
-        />}
-      </div>
-    ));
+    let output = blocks.map((element) => {
+      const ElementComponent = this.context.injector
+        .get('Element', `${element.BlockSchema.typeName}`);
+
+      return (
+        <div key={element.ID}>
+          <ElementComponent
+            element={element}
+            areaId={areaId}
+            type={getElementTypeConfig(element.BlockSchema.typeName, elementTypes)}
+            link={element.BlockSchema.actions.edit}
+            onDragOver={onDragOver}
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+          />
+          {isDraggingOver || <HoverBarComponent
+            areaId={areaId}
+            elementId={element.ID}
+            elementTypes={allowedElementTypes}
+          />}
+        </div>
+      );
+    });
 
     output = [
       <HoverBarComponent key={0} areaId={areaId} elementId={0} elementTypes={allowedElementTypes} />
@@ -103,12 +107,10 @@ class ElementList extends Component {
       { 'elemental-editor-list--empty': !blocks || !blocks.length }
     );
 
-    return this.props.connectDropTarget(
-      <div className={listClassNames}>
-        {this.renderLoading()}
-        {this.renderBlocks()}
-      </div>
-    );
+    return this.props.connectDropTarget(<div className={listClassNames}>
+      {this.renderLoading()}
+      {this.renderBlocks()}
+    </div>);
   }
 }
 
@@ -128,6 +130,10 @@ ElementList.propTypes = {
 ElementList.defaultProps = {
   blocks: [],
   loading: false,
+};
+
+ElementList.contextTypes = {
+  injector: PropTypes.object,
 };
 
 export { ElementList as Component };
@@ -162,9 +168,8 @@ export default compose(
     draggedItem: monitor.getItem(),
   })),
   inject(
-    ['Element', 'Loading', 'HoverBar', 'DragPositionIndicator'],
-    (ElementComponent, LoadingComponent, HoverBarComponent, DragIndicatorComponent) => ({
-      ElementComponent,
+    ['Loading', 'HoverBar', 'DragPositionIndicator'],
+    (LoadingComponent, HoverBarComponent, DragIndicatorComponent) => ({
       LoadingComponent,
       HoverBarComponent,
       DragIndicatorComponent,

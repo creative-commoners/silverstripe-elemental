@@ -40,8 +40,7 @@ class ElementActions extends Component {
       return null;
     }
 
-    return editTabs.map(
-      ({ name, title }) =>
+    return editTabs.map(({ name, title }) =>
         (<AbstractAction
           key={name}
           name={name}
@@ -49,8 +48,7 @@ class ElementActions extends Component {
           type={type}
           onClick={this.handleEditTabsClick}
           active={name === activeTab}
-        />)
-    );
+        />));
   }
 
   /**
@@ -120,13 +118,11 @@ ElementActions.defaultProps = {
 
 export { ElementActions as Component };
 
-export default compose(
-  inject(
+export default compose(inject(
     ['ActionMenu'],
     (ActionMenuComponent) => ({
       ActionMenuComponent,
     }),
     () => 'ElementEditor.ElementList.Element'
-  )
-)(ElementActions);
+  ))(ElementActions);
 

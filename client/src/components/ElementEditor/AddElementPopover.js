@@ -32,12 +32,10 @@ class AddElementPopover extends Component {
 
       event.preventDefault();
       // TODO This should probably use the GraphQL element type name (element.__typeName)
-      handleAddElementToArea(elementType.class, insertAfterElement).then(
-        () => {
+      handleAddElementToArea(elementType.class, insertAfterElement).then(() => {
           const preview = window.jQuery('.cms-preview');
           preview.entwine('ss.preview')._loadUrl(preview.find('iframe').attr('src'));
-        }
-      );
+        });
       this.handleToggle();
     };
   }

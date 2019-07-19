@@ -930,6 +930,20 @@ JS
     }
 
     /**
+     * TEMP: Workaround for GraphQL not supporting fields that might not exist
+     *
+     * @return int|null
+     */
+    public function getElementsID()
+    {
+        if ($this->hasDatabaseField('ElementsID')) {
+            return $this->getField('ElementsID');
+        }
+
+        return null;
+    }
+
+    /**
      * @return \SilverStripe\ORM\FieldType\DBHTMLText
      */
     public function getEditorPreview()

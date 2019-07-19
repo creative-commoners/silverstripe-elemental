@@ -84,36 +84,33 @@ class ElementEditor extends PureComponent {
 
     // Map the allowed elements because we want to retain the sort order provided by that array.
     const allowedElementTypes = allowedElements.map(className =>
-      elementTypes.find(type => type.class === className)
-    );
+      elementTypes.find(type => type.class === className));
 
-    return connectDropTarget(
-      <div className="element-editor">
-        <ToolbarComponent
-          elementTypes={allowedElementTypes}
-          areaId={areaId}
-          onDragOver={this.handleDragOver}
-        />
-        <ListComponent
-          allowedElementTypes={allowedElementTypes}
-          elementTypes={elementTypes}
-          areaId={areaId}
-          onDragOver={this.handleDragOver}
-          onDragStart={this.handleDragStart}
-          onDragEnd={this.handleDragEnd}
-          dragSpot={dragSpot}
-          isDraggingOver={isDraggingOver}
-          dragTargetElementId={dragTargetElementId}
-        />
-        <ElementDragPreview elementTypes={elementTypes} />
-        <input
-          name={fieldName}
-          type="hidden"
-          value={JSON.stringify(formState) || ''}
-          className="no-change-track"
-        />
-      </div>
-    );
+    return connectDropTarget(<div className="element-editor">
+      <ToolbarComponent
+        elementTypes={allowedElementTypes}
+        areaId={areaId}
+        onDragOver={this.handleDragOver}
+      />
+      <ListComponent
+        allowedElementTypes={allowedElementTypes}
+        elementTypes={elementTypes}
+        areaId={areaId}
+        onDragOver={this.handleDragOver}
+        onDragStart={this.handleDragStart}
+        onDragEnd={this.handleDragEnd}
+        dragSpot={dragSpot}
+        isDraggingOver={isDraggingOver}
+        dragTargetElementId={dragTargetElementId}
+      />
+      <ElementDragPreview elementTypes={elementTypes} />
+      <input
+        name={fieldName}
+        type="hidden"
+        value={JSON.stringify(formState) || ''}
+        className="no-change-track"
+      />
+    </div>);
   }
 }
 
