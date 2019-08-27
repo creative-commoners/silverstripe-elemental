@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import { elementType } from 'types/elementType';
 import { elementTypeType } from 'types/elementTypeType';
 import { compose } from 'redux';
@@ -9,8 +10,29 @@ import i18n from 'i18n';
 import { DropTarget } from 'react-dnd';
 import { getDragIndicatorIndex } from 'lib/dragHelpers';
 import { getElementTypeConfig } from 'state/editor/elementConfig';
+import jQuery from 'jquery';
 
 class ElementList extends Component {
+  componentDidUpdate(prevProps) {
+    const { blocks: oldBlocks } = prevProps;
+    const { blocks: newBlocks } = this.props;
+
+    if (!oldBlocks || oldBlocks.length !== newBlocks.length) {
+      return;
+    }
+
+    // Calculate blocks that have moved
+    const blocks = oldBlocks.filter(
+      (oldElement, orderIndex) => oldElement.ID !== newBlocks[orderIndex].ID
+    );
+
+    blocks.forEach((element) => {
+      // this is expensive, so should be limited to the instances that need it.
+      const thisElement = ReactDOM.findDOMNode(element);
+      jQuery('.htmleditor textarea', thisElement).entwine('ss').getEditor().repaint();
+    })
+  }
+
   getDragIndicatorIndex() {
     const { dragTargetElementId, draggedItem, blocks, dragSpot } = this.props;
 
@@ -137,14 +159,24 @@ const elementListTarget = {
       return {};
     }
 
+    const { target: dropTarget, dropSpot } = elementTargetDropResult;
+    const draggedItem = monitor.getItem();
     const dropIndex = getDragIndicatorIndex(
       blocks.map(element => element.ID),
-      elementTargetDropResult.target,
-      monitor.getItem(),
-      elementTargetDropResult.dropSpot,
+      dropTarget,
+      draggedItem,
+      dropSpot,
     );
+    // The drop index is for the element after the insert indicator - the drop target when dropSpot
+    // is 'top', and we shift the target down in case of 'bottom' {@see getDragIndicatorIndex}
+    // But we insert AFTER id, so must move the index back one in order to get the correct
+    // element's ID.
     const dropAfterID = blocks[dropIndex - 1] ? blocks[dropIndex - 1].ID : '0';
-
+    const draggedItemIndex = blocks.findIndex(item => item === monitor.getItem());
+    // if (draggedItemIndex === dropIndex) {
+    // // do nothing if there is no need to update order
+    //   return {};
+    // }
     return {
       ...elementTargetDropResult,
       dropAfterID,
