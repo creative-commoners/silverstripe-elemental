@@ -66,9 +66,10 @@ const UnpublishAction = (MenuComponent) => (props) => {
   return (
     <MenuComponent {...props}>
       {props.children}
+
       {props.element.canUnpublish === false
         ? null
-        : element.IsPublished && <AbstractAction {...newProps} />
+        : element.isPublished && <AbstractAction {...newProps} />
       }
     </MenuComponent>
   );

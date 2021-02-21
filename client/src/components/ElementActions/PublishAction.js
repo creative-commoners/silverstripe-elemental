@@ -124,7 +124,7 @@ const PublishAction = (MenuComponent) => (props) => {
 
       {props.element.canPublish === false
         ? null
-        : (formDirty || !element.IsLiveVersion) && <AbstractAction {...newProps} />
+        : (formDirty || !element.isLiveVersion) && <AbstractAction {...newProps} />
       }
     </MenuComponent>
   );
