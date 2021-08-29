@@ -17,6 +17,8 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 use Symbiote\GridFieldExtensions\GridFieldAddNewMultiClass;
 
 class ElementalAreaField extends GridField
@@ -231,6 +233,7 @@ class ElementalAreaField extends GridField
             return;
         }
 
+        $elements = [];
         foreach ($elementData as $form => $data) {
             // Extract the ID
             $elementId = (int) substr($form, $idPrefixLength);
@@ -242,10 +245,45 @@ class ElementalAreaField extends GridField
                 // Ignore invalid elements
                 continue;
             }
-
             $data = ElementalAreaController::removeNamespacesFromFields($data, $element->ID);
-
             $element->updateFromFormData($data);
+            $elements[] = $element;
+        }
+
+        // Create a validation result that contains all the element validation errors within the elemental area
+        $thrownValidationResult = null;
+        /** @var BaseElement $element */
+        foreach ($elements as $element) {
+            /** @var ValidationResult $validationResult */
+            $validationResult = $element->validate();
+            if ($validationResult->isValid()) {
+                continue;
+            }
+            foreach ($validationResult->getMessages() as $message) {
+                if (!$thrownValidationResult) {
+                    $thrownValidationResult = new ValidationResult();
+                }
+                // Example $fieldName: PageElements_3_Title
+                $fieldName = sprintf(
+                    EditFormFactory::FIELD_NAMESPACE_TEMPLATE,
+                    $element->ID,
+                    $message['fieldName'] ?? ''
+                );
+                $thrownValidationResult->addFieldError(
+                    $fieldName,
+                    $message['message'] ?? '',
+                    $message['messageType'] ?? ValidationResult::TYPE_ERROR,
+                    $message['messageCode'] ?? null,
+                    $message['messageCast'] ?? ValidationResult::CAST_TEXT
+                );
+            }
+        }
+
+        if ($thrownValidationResult) {
+            throw new ValidationException($thrownValidationResult);
+        }
+
+        foreach ($elements as $element) {
             $element->write();
         }
     }
