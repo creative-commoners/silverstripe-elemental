@@ -9,8 +9,10 @@ import { destroy } from 'redux-form';
 
 /**
  * Reset the Apollo and Redux stores holding data relating to elemental inline edit forms
+ *
+ * @param {Array} invalidFieldNames Field names that failed server-side validation
  */
-const resetStores = () => {
+const resetStores = (keysToRetain) => {
   // After page level saves we need to reload all the blocks from the server. We can remove
   // this if we can figure out a way to optimistically update the apollo cache. See:
   // https://github.com/dnadesign/silverstripe-elemental/pull/439#issuecomment-428773370
@@ -28,9 +30,18 @@ const resetStores = () => {
     }
 
     // We can introspect the store to find form names in the `element` namespace
-    store.dispatch(destroy(
-      ...Object.keys(store.getState().form.formState.element || {}).map(name => `element.${name}`)
-    ));
+    const keys = Object.keys(store.getState().form.formState.element || {});
+
+    // Create a list of keys to delete from the redux store
+    const keysToDelete = {};
+    keys.forEach(key => {
+      if (!keysToRetain.includes(key)) {
+        keysToDelete[key] = true;
+      }
+    });
+
+    // Delete data of valid elements from redux so that Apollo can refresh from the server
+    store.dispatch(destroy(...Object.keys(keysToDelete).map(name => `element.${name}`)));
   }, 0);
 };
 
@@ -60,16 +71,47 @@ jQuery.entwine('ss', ($) => {
     },
 
     onunmatch() {
-      resetStores();
+      if (this.attr('data-submitting-element-editor') !== '1') {
+        resetStores([]);
+      }
       ReactDOM.unmountComponentAtNode(this[0]);
     },
 
-    /**
-     * Invalidate cache after the form is submitted to force apollo to re-fetch.
-     */
+    'from .cms-container': {
+      onsubmitform() {
+        this.attr('data-submitting-element-editor', '1');
+      }
+    },
+
     'from .cms-edit-form': {
-      onaftersubmitform() {
-        resetStores();
+      onaftersubmitform(event, data) {
+        this.attr('data-submitting-element-editor', null);
+        const validationResultPjax = JSON.parse(data.xhr.responseText).ValidationResult;
+        const validationResult = JSON.parse(validationResultPjax.replace(/<\/?script[^>]*?>/g, ''));
+
+        // Create a list of keys in the redux store that are in the ElementalAreaField
+        // Do not delete these keys if there are any validation errors from either the
+        // ElementalAreaField or a regular page field
+        // This is because we want redux to hydrate the form, rather than the fresh request apollo
+        // from Apollo which will return a value from the database.  Instead the user should still
+        // see any modfied value they just entered, whether valid or invalid
+        const keysToRetain = [];
+        if (!validationResult.isValid) {
+          validationResult.submittedFields.forEach(submittedField => {
+            const match = submittedField.match(/^PageElements_([0-9]+)_/);
+            if (!match) {
+              return;
+            }
+            const elementID = match[1];
+            const key = `ElementForm_${elementID}`;
+            if (!keysToRetain.includes(key)) {
+              keysToRetain.push(key);
+            }
+          });
+        }
+
+        // Invalidate cache after the form is submitted to force apollo to re-fetch.
+        resetStores(keysToRetain);
       }
     },
   });
