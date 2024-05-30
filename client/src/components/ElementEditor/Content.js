@@ -6,7 +6,7 @@ import { compose } from 'redux';
 class Content extends PureComponent {
   render() {
     const {
-      id,
+      element,
       fileUrl,
       fileTitle,
       content,
@@ -48,7 +48,7 @@ class Content extends PureComponent {
           <InlineEditFormComponent
             extraClass={extraClass}
             onClick={(event) => event.stopPropagation()}
-            elementId={id}
+            element={element}
             activeTab={activeTab}
             onFormInit={onFormInit}
             handleLoadingError={handleLoadingError}

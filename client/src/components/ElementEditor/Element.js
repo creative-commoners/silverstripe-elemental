@@ -399,7 +399,7 @@ const Element = (props) => {
         onDragEnd={onDragEnd}
       />
       <ContentComponent
-        id={element.id}
+        element={element}
         fileUrl={element.blockSchema.fileURL}
         fileTitle={element.blockSchema.fileTitle}
         content={getSummary(element, type)}

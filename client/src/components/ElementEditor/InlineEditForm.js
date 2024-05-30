@@ -54,11 +54,11 @@ class InlineEditForm extends PureComponent {
   }
 
   render() {
-    const { elementId, extraClass, onClick, onFormInit, formHasState, notVisible } = this.props;
+    const { element, extraClass, onClick, onFormInit, formHasState, notVisible } = this.props;
     const { loadingError } = this.state;
 
     const classNames = classnames('element-editor-editform', extraClass);
-    const schemaUrl = loadElementSchemaValue('schemaUrl', elementId);
+    const schemaUrl = loadElementSchemaValue('schemaUrl', element.id) + `?isLiveVersion=${element.isLiveVersion}&isPublished=${element.isPublished}&=version=${element.version}`;
 
     // formTag needs to be a form rather than a div so that the php FormAction that turns into
     // a <button type="submit>" submits this <form>, rather than the <form> for the parent page EditForm
@@ -104,7 +104,7 @@ InlineEditForm.propTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
-  const formName = loadElementFormStateName(ownProps.elementId);
+  const formName = loadElementFormStateName(ownProps.element.id);
 
   return {
     formHasState: state.form.formState && state.form.formState.element &&
